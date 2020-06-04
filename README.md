@@ -4,9 +4,14 @@ See license.txt for pcb-ioAutorouter license conditions.
 
 # Usage
 
+./ubiquitous_bash.sh _setup
+./ubiquitous_bash.sh _anchor
+
+./_pcb-ioAutorouter
 
 # Design
 
+Branch 'LP699471-rev1' of GitHub repository https://github.com/bert/pcb is used for '_lib/pcb' . An archival fork with similar features, is available as branch 'LP699471rev1', from https://github.com/mirage335/pcb .
 
 # Safety
 
