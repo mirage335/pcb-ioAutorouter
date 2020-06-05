@@ -33,7 +33,7 @@ _testBuilt_prog() {
 	# ATTENTION: Disable ONLY for development testing purposes.
 	# Limited test of self-built PCB binary.
 	# CAUTION: Copying to an alternate distro or otherwise possibly binary incompatible system may allow possibility of untested failures!
-	if [[ -e "$scriptLib"/pcb-2.2.1/src/pcb ]] && "$scriptLib"/pcb/src/pcb --help > /dev/null 2>&1
+	if [[ -e "$scriptLib"/pcb/src/pcb ]] && "$scriptLib"/pcb/src/pcb --help > /dev/null 2>&1
 	then
 		return 0
 	fi

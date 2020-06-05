@@ -16749,7 +16749,7 @@ _build-app_pcb() {
 	
 	_mustGetSudo
 	
-	_build-app_pcb_fungw
+	#_build-app_pcb_fungw
 	
 	
 	
@@ -16767,13 +16767,17 @@ _build-app_pcb() {
 	# WARNING: Not adequately tested - "make uninstall" .
 	#sudo -n make install
 	
+	
+	# Apparently unnecessary files cause git submodule problems.
+	_safeRMR "$scriptLib"/pcb/doc/pcb.t2p
+	
 	cd "$scriptLib"
 	return 0
 }
 
 
 _refresh_anchors() {
-	cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_pcb_ioAutorouter
+	cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_pcb-ioAutorouter
 }
 
 
