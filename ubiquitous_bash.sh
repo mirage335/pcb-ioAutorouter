@@ -7687,12 +7687,12 @@ _closeChRoot_emergency() {
 	fi
 	
 	#Not called by systemd, AND instanced directories still mounted, do not globally halt all. (optional)
-	#[[ "$1" == "" ]] && find "$scriptAbsoluteFolder"/v_* -maxdepth 1 -type d > /dev/null && return 0
+	#[[ "$1" == "" ]] && find "$scriptAbsoluteFolder"/v_* -maxdepth 1 -type d | _condition_lines_zero && return 0
 	
 	#Not called by systemd, do not globally halt all.
 	[[ "$1" == "" ]] && return 0
 	
-	! _readLocked "$lock_open" && ! find "$scriptAbsoluteFolder"/v_*/fs -maxdepth 1 -type d && return 0
+	! _readLocked "$lock_open" && find "$scriptAbsoluteFolder"/v_*/fs -maxdepth 1 -type d | _condition_lines_zero && return 0
 	_readLocked "$lock_closing" && return 1
 	_readLocked "$lock_opening" && return 1
 	
@@ -16615,7 +16615,7 @@ _testBuilt_prog() {
 	# ATTENTION: Disable ONLY for development testing purposes.
 	# Limited test of self-built PCB binary.
 	# CAUTION: Copying to an alternate distro or otherwise possibly binary incompatible system may allow possibility of untested failures!
-	if [[ -e "$scriptLib"/pcb-2.2.1/src/pcb ]] && "$scriptLib"/pcb/src/pcb --help > /dev/null 2>&1
+	if [[ -e "$scriptLib"/pcb/src/pcb ]] && "$scriptLib"/pcb/src/pcb --help > /dev/null 2>&1
 	then
 		return 0
 	fi
@@ -16776,8 +16776,65 @@ _build-app_pcb() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # ATTENTION: Add to ops!
+_refresh_anchors_task() {
+	true
+	#cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_task_pcb-ioAutorouter_30MHzLowPass
+}
+
+_refresh_anchors_specific() {
+	true
+	
+	_refresh_anchors_specific_single_procedure _pcb-ioAutorouter
+}
+
+_refresh_anchors_user() {
+	true
+	
+	_refresh_anchors_user_single_procedure _pcb-ioAutorouter
+}
+
+_associate_anchors_request() {
+	if type "_refresh_anchors_user" > /dev/null 2>&1
+	then
+		_tryExec "_refresh_anchors_user"
+		#return
+	fi
+	
+	
+	_messagePlain_request 'association: dir, *.pcb'
+	echo _pcb-ioAutorouter"$ub_anchor_suffix"
+}
+
+
 _refresh_anchors() {
 	cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_pcb-ioAutorouter
+	
+	_tryExec "_refresh_anchors_task"
+	
+	return 0
 }
 
 
@@ -17755,7 +17812,8 @@ _compile_bash_shortcuts() {
 	
 	includeScriptList+=( "shortcuts/prompt"/visualPrompt.sh )
 	
-	[[ "$enUb_dev_heavy" == "true" ]] && includeScriptList+=( "shortcuts/dev"/devsearch.sh )
+	#[[ "$enUb_dev_heavy" == "true" ]] && 
+	includeScriptList+=( "shortcuts/dev"/devsearch.sh )
 	
 	[[ "$enUb_fakehome" == "true" ]] && [[ "$enUb_dev_heavy" == "true" ]] && includeScriptList+=( "shortcuts/dev/app"/devemacs.sh )
 	[[ "$enUb_fakehome" == "true" ]] && [[ "$enUb_dev_heavy" == "true" ]] && includeScriptList+=( "shortcuts/dev/app"/devatom.sh )

@@ -141,8 +141,65 @@ _build-app_pcb() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # ATTENTION: Add to ops!
+_refresh_anchors_task() {
+	true
+	#cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_task_pcb-ioAutorouter_30MHzLowPass
+}
+
+_refresh_anchors_specific() {
+	true
+	
+	_refresh_anchors_specific_single_procedure _pcb-ioAutorouter
+}
+
+_refresh_anchors_user() {
+	true
+	
+	_refresh_anchors_user_single_procedure _pcb-ioAutorouter
+}
+
+_associate_anchors_request() {
+	if type "_refresh_anchors_user" > /dev/null 2>&1
+	then
+		_tryExec "_refresh_anchors_user"
+		#return
+	fi
+	
+	
+	_messagePlain_request 'association: dir, *.pcb'
+	echo _pcb-ioAutorouter"$ub_anchor_suffix"
+}
+
+
 _refresh_anchors() {
 	cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_pcb-ioAutorouter
+	
+	_tryExec "_refresh_anchors_task"
+	
+	return 0
 }
 
 

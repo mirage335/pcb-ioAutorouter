@@ -2,6 +2,8 @@ Copyright (C) 2020 mirage335
 See the end of the file for license conditions.
 See license.txt for pcb-ioAutorouter license conditions.
 
+Self-contained installation of pcb with patch for autorouter compatibility.
+
 # Usage
 
 ./ubiquitous_bash.sh _setup
