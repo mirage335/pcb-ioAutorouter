@@ -700,7 +700,7 @@ _safeRMR() {
 		return 1
 	fi
 	
-	#Blacklist.
+	#Denylist.
 	[[ "$1" == "/home" ]] && return 1
 	[[ "$1" == "/home/" ]] && return 1
 	[[ "$1" == "/home/$USER" ]] && return 1
@@ -714,7 +714,7 @@ _safeRMR() {
 	[[ "$1" == "$HOME" ]] && return 1
 	[[ "$1" == "$HOME/" ]] && return 1
 	
-	#Whitelist.
+	#Allowlist.
 	local safeToRM=false
 	
 	local safeScriptAbsoluteFolder
@@ -783,7 +783,7 @@ _safePath() {
 		return 1
 	fi
 	
-	#Blacklist.
+	#Denylist.
 	[[ "$1" == "/home" ]] && return 1
 	[[ "$1" == "/home/" ]] && return 1
 	[[ "$1" == "/home/$USER" ]] && return 1
@@ -797,7 +797,7 @@ _safePath() {
 	[[ "$1" == "$HOME" ]] && return 1
 	[[ "$1" == "$HOME/" ]] && return 1
 	
-	#Whitelist.
+	#Allowlist.
 	local safeToRM=false
 	
 	local safeScriptAbsoluteFolder
@@ -1356,12 +1356,17 @@ _priority_enumerate_pattern() {
 	rm "$parentListFile"
 }
 
+# DANGER: Best practice is to call as with trailing slashes and source trailing dot .
+# _instance_internal /root/source/. /root/destination/
+# _instance_internal "$1"/. "$actualFakeHome"/"$2"/
+# DANGER: Do not silence output unless specifically required (eg. links, possibly to directories, intended not to overwrite copies).
+# _instance_internal "$globalFakeHome"/. "$actualFakeHome"/ > /dev/null 2>&1
 _instance_internal() {
 	! [[ -e "$1" ]] && return 1
 	! [[ -d "$1" ]] && return 1
 	! [[ -e "$2" ]] && return 1
 	! [[ -d "$2" ]] && return 1
-	rsync -q -ax --exclude "/.cache" --exclude "/.git" "$@"
+	rsync -q -ax --exclude "/.cache" --exclude "/.git" --exclude ".git" "$@"
 }
 
 #echo -n
@@ -2836,21 +2841,30 @@ _detect_x11() {
 	return 1
 }
 
+_typeShare() {
+	_typeDep "$1" && return 0
+	
+	[[ -e /usr/share/"$1" ]] && ! [[ -d /usr/share/"$1" ]] && return 0
+	[[ -e /usr/local/share/"$1" ]] && ! [[ -d /usr/local/share/"$1" ]] && return 0
+	
+	return 1
+}
+
 _typeDep() {
 	
 	# WARNING: Allows specification of entire path from root. *Strongly* prefer use of subpath matching, for increased portability.
 	[[ "$1" == '/'* ]] && [[ -e "$1" ]] && return 0
 	
-	[[ -e /lib/"$1" ]] && return 0
-	[[ -e /lib/x86_64-linux-gnu/"$1" ]] && return 0
-	[[ -e /lib64/"$1" ]] && return 0
-	[[ -e /lib64/x86_64-linux-gnu/"$1" ]] && return 0
-	[[ -e /usr/lib/"$1" ]] && return 0
-	[[ -e /usr/lib/x86_64-linux-gnu/"$1" ]] && return 0
-	[[ -e /usr/local/lib/"$1" ]] && return 0
-	[[ -e /usr/local/lib/x86_64-linux-gnu/"$1" ]] && return 0
-	[[ -e /usr/include/"$1" ]] && return 0
-	[[ -e /usr/local/include/"$1" ]] && return 0
+	[[ -e /lib/"$1" ]] && ! [[ -d /lib/"$1" ]] && return 0
+	[[ -e /lib/x86_64-linux-gnu/"$1" ]] && ! [[ -d /lib/x86_64-linux-gnu/"$1" ]] && return 0
+	[[ -e /lib64/"$1" ]] && ! [[ -d /lib64/"$1" ]] && return 0
+	[[ -e /lib64/x86_64-linux-gnu/"$1" ]] && ! [[ -d /lib64/x86_64-linux-gnu/"$1" ]] && return 0
+	[[ -e /usr/lib/"$1" ]] && ! [[ -d /usr/lib/"$1" ]] && return 0
+	[[ -e /usr/lib/x86_64-linux-gnu/"$1" ]] && ! [[ -d /usr/lib/x86_64-linux-gnu/"$1" ]] && return 0
+	[[ -e /usr/local/lib/"$1" ]] && ! [[ -d  /usr/local/lib/"$1" ]] && return 0
+	[[ -e /usr/local/lib/x86_64-linux-gnu/"$1" ]] && ! [[ -d /usr/local/lib/x86_64-linux-gnu/"$1" ]] && return 0
+	[[ -e /usr/include/"$1" ]] && ! [[ -d /usr/include/"$1" ]] && return 0
+	[[ -e /usr/local/include/"$1" ]] && ! [[ -d /usr/local/include/"$1" ]] && return 0
 	
 	if ! type "$1" >/dev/null 2>&1
 	then
@@ -3758,7 +3772,7 @@ _stopwatch() {
 
 
 _set_java_arbitrary() {
-	export ubJava="$1"
+	export ubJava="$1""$ubJavac"
 }
 _check_java_arbitrary() {
 	type "$ubJava" > /dev/null 2>&1
@@ -3834,6 +3848,16 @@ _java_openjdk11_PATH() {
 	return 1
 }
 _java_openjdk11() {
+	export ubJavac=""
+	_java_openjdk11_debian "$@"
+	[[ "$?" == '0' ]] && return 0
+	_java_openjdk11_usrbin "$@"
+	[[ "$?" == '0' ]] && return 0
+	_java_openjdk11_PATH "$@"
+	[[ "$?" == '0' ]] && return 0
+}
+_javac_openjdk11() {
+	export ubJavac="c"
 	_java_openjdk11_debian "$@"
 	[[ "$?" == '0' ]] && return 0
 	_java_openjdk11_usrbin "$@"
@@ -3924,6 +3948,16 @@ _java_openjdk8_PATH() {
 	return 1
 }
 _java_openjdk8() {
+	export ubJavac=""
+	_java_openjdk8_debian "$@"
+	[[ "$?" == '0' ]] && return 0
+	_java_openjdk8_usrbin "$@"
+	[[ "$?" == '0' ]] && return 0
+	_java_openjdk8_PATH "$@"
+	[[ "$?" == '0' ]] && return 0
+}
+_javac_openjdk8() {
+	export ubJavac="c"
 	_java_openjdk8_debian "$@"
 	[[ "$?" == '0' ]] && return 0
 	_java_openjdk8_usrbin "$@"
@@ -3995,6 +4029,16 @@ _java_openjdkANY_PATH() {
 	return 1
 }
 _java_openjdkANY() {
+	export ubJavac=""
+	_java_openjdkANY_debian "$@"
+	[[ "$?" == '0' ]] && return 0
+	_java_openjdkANY_usrbin "$@"
+	[[ "$?" == '0' ]] && return 0
+	_java_openjdkANY_PATH "$@"
+	[[ "$?" == '0' ]] && return 0
+}
+_javac_openjdkANY() {
+	export ubJavac="c"
 	_java_openjdkANY_debian "$@"
 	[[ "$?" == '0' ]] && return 0
 	_java_openjdkANY_usrbin "$@"
@@ -4114,6 +4158,11 @@ _java_oraclejdk_ANY() {
 	[[ "$?" == '0' ]] && return 0
 }
 _java_oraclejdk() {
+	export ubJavac=""
+	_java_oraclejdk_ANY "$@"
+}
+_javac_oraclejdk() {
+	export ubJavac="c"
 	_java_oraclejdk_ANY "$@"
 }
 _set_java_oraclejdk_ANY() {
@@ -4179,6 +4228,15 @@ _java() {
 	#_java_oraclejdk "$@"
 }
 
+_javac() {
+	_javac_openjdk11 "$@"
+	_javac_openjdk8 "$@"
+	_javac_openjdkANY "$@"
+	
+	# DANGER: Oracle Java *strongly* discouraged. Support provided as rough example only.
+	#_javac_oraclejdk11 "$@"
+	#_javac_oraclejdk "$@"
+}
 
 
 #####Idle
@@ -7791,7 +7849,7 @@ _mountChRoot_project() {
 		return 1
 	fi
 	
-	#Blacklist.
+	#Denylist.
 	[[ "$sharedHostProjectDir" == "/home" ]] && return 1
 	[[ "$sharedHostProjectDir" == "/home/" ]] && return 1
 	[[ "$sharedHostProjectDir" == "/home/$USER" ]] && return 1
@@ -7805,7 +7863,7 @@ _mountChRoot_project() {
 	[[ $(id -u) != 0 ]] && [[ "$sharedHostProjectDir" == "$HOME" ]] && return 1
 	[[ $(id -u) != 0 ]] && [[ "$sharedHostProjectDir" == "$HOME/" ]] && return 1
 	
-	#Whitelist.
+	#Allowlist.
 	local safeToMount=false
 	
 	local safeScriptAbsoluteFolder="$_getScriptAbsoluteFolder"
@@ -16139,6 +16197,12 @@ _test() {
 	rm -f "$safeTmp"/working
 	rm -f "$safeTmp"/broken
 	
+	
+	# WARNING: Not tested by default, due to lack of use except where faults are tolerable, and slim possibility of useful embedded systems not able to pass.
+	#! echo \$123 | grep -E '^\$[0-9]|^\.[0-9]' > /dev/null 2>&1 && _messageFAIL && return 1
+	#! echo \.123 | grep -E '^\$[0-9]|^\.[0-9]' > /dev/null 2>&1 && _messageFAIL && return 1
+	#echo 123 | grep -E '^\$[0-9]|^\.[0-9]' > /dev/null 2>&1 && _messageFAIL && return 1
+	
 	_messagePASS
 	
 	
@@ -16208,6 +16272,8 @@ _test() {
 	_getDep which
 	
 	_getDep printf
+	
+	_getDep stat
 	
 	_getDep dd
 	
@@ -17737,6 +17803,7 @@ _compile_bash_utilities() {
 # WARNING: Do NOT deprecate java versions for 'security' reasons - this is intended ONLY to support applications which already normally require user or root permissions.
 _compile_bash_utilities_java() {
 	[[ "$enUb_java" == "true" ]] && includeScriptList+=( "special/java"/java.sh )
+#	[[ "$enUb_java" == "true" ]] && includeScriptList+=( "special/java"/javac.sh )
 }
 
 _compile_bash_utilities_virtualization() {
