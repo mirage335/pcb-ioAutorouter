@@ -1,6 +1,7 @@
 [submodule "_lib/ubiquitous_bash"]
 	path = _lib/ubiquitous_bash
 	url = git@github.com:mirage335/ubiquitous_bash.git
+	shallow = true
 [submodule "_lib/pcb"]
 	path = _lib/pcb
 	url = git@github.com:bert/pcb.git
