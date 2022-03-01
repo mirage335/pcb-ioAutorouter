@@ -1,4 +1,51 @@
+
+_index
+_local/*
+
+id_rsa
+pubring.kbx
+pubring.kbx*
+trustdb.gpg
+
+_local/h
+
+_local/id_rsa
+_local/id_rsa.pub
+
+_local/tor/sshd/dd*/
+_local/tor/sshd/dd**/
+
+
+_bundle/
+lean_compressed.sh
+ubcore_compressed.sh
+core_compressed.sh
+core_monolithic.sh
+core_monolithic_compressed.sh
+monolithic_compressed.sh
+ubiquitous_bash_compressed.sh
+
+
 /ops
+
+_arc/
+
+__disk/**/
+
+
+/_local/.bgpid
+/_local/.bgpid*
+
+_local/ssh/log/
+
+
+
+
+
+!_local/ubcp
+.search
+search/
+
 
 .c_*
 .c_*/
@@ -20,6 +67,14 @@ q_*/
 w_*/
 v_*/
 h_*/
+h_esr*/
+
+d_*
+d_*/
+_d_*
+_d_*/
+__d_*
+__d_*/
 
 *_history
 
@@ -33,16 +88,28 @@ devtask/
 USAGE.*.html
 _buried
 
-_local/*
-!_local/ubcp
 
-_index
+.cache/
+
 
 **/_wbottle/.update-timestamp
 **/_wbottle/dosdevices
 **/_wbottle/drive_c/users
 
-package_ubcp.tar.gz
+*.tar
+*.zip
+*.iso
+
+package.tar.*
+package_ubcp.tar.*
+package_ubcp*.tar.*
+package_ubcp-cygwinOnly.tar.*
+package_ubcp-cygwinOnly*.tar.*
+
+package_*.tar.*
+package_tmp.tar.*
+package_full.tar.*
+package_kit.tar.*
 
 \#*\#
 *~
@@ -51,6 +118,7 @@ package_ubcp.tar.gz
 *.kate-swp
 
 nohup.out
+awkvars.out
 
 *.log
 *.ldb
@@ -89,7 +157,8 @@ nohup.out
 
 _local/h/.arduino15/staging/
 
-_local/h
+_local/h_esr
+
 _local/templates
 
 **/node_modules/pty.js/build/Makefile
@@ -108,33 +177,116 @@ _local/templates
 **/.config/Atom/Cookies*
 **/.config/Atom/IndexedDB/
 
-# Unusual. Require forced addition of builds and binaries, due to expected non-portability .
-# Unusual. Alternative approach op performing builds in temporary directories not used.
 
-_lib/fungw**
-_lib/genht**
-_lib/pcb-rnd**
-_lib/pcb**
+_local/h/.config/baloofilerc
 
-_lib/pcb/doc/pcb.t2p/
+_local/h/.config/dconf/user
 
-_lib/fungw**/*.o
-_lib/fungw**/*.a
-_lib/fungw**/*.so
-_lib/fungw**/*.so*
+_local/h/.local/share/recent*
+_local/h/.local/share/recent**
 
-_lib/genht**/*.o
-_lib/genht**/*.a
-_lib/genht**/*.so
-_lib/genht**/*.so*
+_local/h/.local/share/RecentDocuments
+_local/h/.local/share/dolphin
 
-_lib/pcb-rnd**/*.o
-_lib/pcb-rnd**/*.a
-_lib/pcb-rnd**/*.so
-_lib/pcb-rnd**/*.so*
+_local/h/.local/share/user-places*
 
-_lib/pcb**/*.o
-_lib/pcb**/*.a
-_lib/pcb**/*.so
-_lib/pcb**/*.so*
+
+_local/h/.local/share/gvfs*
+_local/h/.local/share/gvfs**
+
+
+_local/h/.bashrc
+_local/h/.gitconfig
+
+
+
+
+_local/h/.nv
+_local/h/.recently-used
+_local/h/.ssh
+_local/h/.ubcore
+_local/h/Documents
+_local/h/Downloads
+_local/h/Music
+_local/h/Pictures
+_local/h/Public
+_local/h/Templates
+_local/h/Videos
+_local/h/bin
+_local/h/core
+_local/h/project
+_local/h/projects
+_local/h/realHome
+_local/h/.Xauthority
+
+
+_local/h_esr/.nv
+_local/h_esr/.recently-used
+_local/h_esr/.ssh
+_local/h_esr/.ubcore
+_local/h_esr/Documents
+_local/h_esr/Downloads
+_local/h_esr/Music
+_local/h_esr/Pictures
+_local/h_esr/Public
+_local/h_esr/Templates
+_local/h_esr/Videos
+_local/h_esr/bin
+_local/h_esr/core
+_local/h_esr/project
+_local/h_esr/projects
+_local/h_esr/realHome
+_local/h_esr/.Xauthority
+
+
+**/h*/.pki
+**/h*/.nv
+
+
+**/h*/.Xauthority
+**/h*/.bash_history
+**/h*/.bashrc
+**/h*/.gitconfig
+**/h*/.ssh
+**/h*/.ubcore
+**/h*/Desktop
+**/h*/Documents
+**/h*/Downloads
+**/h*/Music
+**/h*/Pictures
+**/h*/Public
+**/h*/Templates
+**/h*/Videos
+**/h*/bin
+**/h*/core
+**/h*/project
+**/h*/projects
+**/h*/realHome
+
+
+**/h*/.java
+**/h*/.oracle_jre*
+
+
+
+_local/setups/firefox
+_local/setups/firefox-esr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
