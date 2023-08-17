@@ -36,7 +36,7 @@ _ub_cksum_special_derivativeScripts_contents() {
 #export ub_setScriptChecksum_disable='true'
 ( [[ -e "$0".nck ]] || [[ "${BASH_SOURCE[0]}" != "${0}" ]] || [[ "$1" == '--profile' ]] || [[ "$1" == '--script' ]] || [[ "$1" == '--call' ]] || [[ "$1" == '--return' ]] || [[ "$1" == '--devenv' ]] || [[ "$1" == '--shell' ]] || [[ "$1" == '--bypass' ]] || [[ "$1" == '--parent' ]] || [[ "$1" == '--embed' ]] || [[ "$1" == '--compressed' ]] || [[ "$0" == "/bin/bash" ]] || [[ "$0" == "-bash" ]] || [[ "$0" == "/usr/bin/bash" ]] || [[ "$0" == "bash" ]] ) && export ub_setScriptChecksum_disable='true'
 export ub_setScriptChecksum_header='2591634041'
-export ub_setScriptChecksum_contents='3658804967'
+export ub_setScriptChecksum_contents='3470068032'
 
 # CAUTION: Symlinks may cause problems. Disable this test for such cases if necessary.
 # WARNING: Performance may be crucial here.
@@ -31089,14 +31089,33 @@ _build-app_pcb() {
 	
 	
 	cd "$scriptLib"/pcb
+	make clean
+	
+	mkdir -p ./share/pcb
+	cd ./share/pcb
+	rm -f ./ListLibraryContents.sh
+	#ln -sf ../../lib/ListLibraryContents.sh ./ListLibraryContents.sh
+	cp -f ../../lib/ListLibraryContents.sh ./ListLibraryContents.sh
+	chmod 755 ./ListLibraryContents.sh
+	
+	cd "$scriptLib"/pcb
 	
 	./autogen.sh
 	
 	#./configure --all=buildin --buildin-lib_compat_help --buildin-lib_gensexpr --buildin-lib_gtk_common --buildin-lib_hid_common --buildin-lib_hid_gl --buildin-lib_hid_pcbui --buildin-lib_netmap --buildin-lib_polyhelp --buildin-lib_vfs --buildin-lib_wget --buildin-acompnet --buildin-act_draw --buildin-act_read --buildin-ar_cpcb --buildin-asm --buildin-autocrop --buildin-autoplace --buildin-autoroute --buildin-dialogs --buildin-distalign --buildin-distaligntext --buildin-djopt --buildin-draw_csect --buildin-draw_fab --buildin-draw_fontsel --buildin-drc_orig --buildin-drc_query --buildin-exto_std --buildin-fontmode --buildin-jostle --buildin-millpath --buildin-mincut --buildin-oldactions --buildin-order_pcbway --buildin-order --buildin-polycombine --buildin-polystitch --buildin-propedit --buildin-puller --buildin-query --buildin-renumber --buildin-report --buildin-rubberband_orig --buildin-script --buildin-serpentine --buildin-shand_cmd --buildin-shape --buildin-sketch_route --buildin-smartdisperse --buildin-stroke --buildin-teardrops --buildin-tool_std --buildin-vendordrill --buildin-fp_board --buildin-fp_fs --buildin-fp_wget --buildin-import_dsn --buildin-import_gnetlist --buildin-import_hpgl --buildin-import_net_cmd --buildin-import_net_action --buildin-import_netlist --buildin-import_pxm_gd --buildin-import_pxm_pnm --buildin-import_sch2 --buildin-import_sch --buildin-import_ttf --buildin-cam --buildin-export_bom --buildin-export_dsn --buildin-export_dxf --buildin-export_excellon --buildin-export_fidocadj --buildin-export_gcode --buildin-export_gerber --buildin-export_lpr --buildin-export_oldconn --buildin-export_openems --buildin-export_openscad --buildin-export_png --buildin-export_ps --buildin-export_stat --buildin-export_stl --buildin-export_svg --buildin-export_test --buildin-export_xy --buildin-io_dsn --buildin-io_kicad_legacy --buildin-io_kicad --buildin-io_pcb
 	
-	./configure --with-gui=gtk --with-x --with-printer=lpr --with-exporters=dsn,bom,gerber,png,ps,gcode,nelma --enable-doc --enable-toporouter --enable-toporouter-output --enable-gl --enable-m4lib-png
+	#./configure --with-gui=gtk --with-x --with-printer=lpr --with-exporters=dsn,bom,gerber,png,ps,gcode,nelma --enable-doc --enable-toporouter --enable-toporouter-output --enable-gl --enable-m4lib-png
 	
-	make -j$(nproc)
+	#./configure --disable-doc --disable-update-desktop-database --with-gui=gtk --with-x --with-printer=lpr --with-exporters=dsn,bom,gerber,png,ps,gcode,nelma --enable-toporouter --enable-toporouter-output --enable-gl --enable-m4lib-png
+	
+	./configure --disable-doc --with-gui=gtk --with-x --with-printer=lpr --with-exporters=dsn,bom,gerber,png,ps,gcode,nelma --enable-toporouter --enable-toporouter-output --enable-gl --enable-m4lib-png
+	
+	#make -j$(nproc)
+	make
+	
+	rm -f "$scriptLib"/pcb/share/pcb/ListLibraryContents.sh
+	rmdir "$scriptLib"/pcb/share/pcb
+	rmdir "$scriptLib"/pcb/share
 	
 	# WARNING: May be unnecessary, and may cause conflicts with distro package.
 	# WARNING: Not adequately tested - "make uninstall" .
